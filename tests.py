@@ -302,6 +302,16 @@ class SerializationTests(object):
         assert field[1, 0].TYPE == Fish.TYPE
         assert field[1, 1].TYPE == Shrimp.TYPE
 
+    @staticmethod
+    def unserialize_auto_empty():
+        data = '10\n10\nF'
+
+        field = FileSerializer().unserialize(data)
+
+        assert field.width == 10
+        assert field.height == 10
+        assert field[5, 5].TYPE == Empty.TYPE
+
 
 if __name__ == '__main__':
     print('Start testing...')
@@ -334,5 +344,6 @@ if __name__ == '__main__':
     SerializationTests.serialize_different_types()
     SerializationTests.unserialize_empty()
     SerializationTests.unserialize_different_types()
+    SerializationTests.unserialize_auto_empty()
 
     print('All tests passed!')

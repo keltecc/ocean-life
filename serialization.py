@@ -26,8 +26,11 @@ def _field_to_lines(field):
 
 def _lines_to_field(width, height, lines):
     field = Field(width, height)
+    empty_symbol = _SYMBOLS[Empty.TYPE]
     for y in range(height):
-        line = lines[y]
+        line = lines[y] if len(lines) > y else empty_symbol * width
+        if len(line) < width:
+            line = line.ljust(width, empty_symbol)
         for x in range(width):
             field[x, y] = _CELLS[line[x]]()
     return field
