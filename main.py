@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 from view.ui import UI
 from model.game import Game
-from serialization import FieldSerializer
+from serialization import FileSerializer, UISerializer
 
 
 def parse_args():
@@ -17,27 +17,30 @@ def parse_args():
     return parser.parse_args()
 
 
-def load_field(filename, serializer):
-    with open(filename, 'r') as file:
-        data = file.read()
-    return serializer.unserialize(data)
+class FieldIO(object):
+    def __init__(self, serializer):
+        self._serializer = serializer
 
+    def load_from_file(self, filename):
+        with open(filename, 'r') as file:
+            data = file.read()
+        return self._serializer.unserialize(data)
 
-def save_field(field, filename, serializer):
-    data = serializer.serialize(field)
-    with open(filename, 'w') as file:
-        file.write(data)
+    def save_to_file(self, filename, field):
+        data = self._serializer.serialize(field)
+        with open(filename, 'w') as file:
+            file.write(data)
 
 
 def main():
     args = parse_args()
-    serializer = FieldSerializer()
-    field = load_field(args.field, serializer)
+    field_io = FieldIO(FileSerializer())
+    field = field_io.load_from_file(args.field)
     game = Game(field)
-    ui = UI(game, serializer)
+    ui = UI(game, UISerializer())
     ui.run(args.tick_time, args.confirm)
     if args.save:
-        save_field(game.field, args.save, serializer)
+        field_io.save_to_file(args.save, game.field)
         print('Field saved.')
 
 
