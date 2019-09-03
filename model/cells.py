@@ -29,11 +29,10 @@ class Lifeform(Cell):
 
     def __init__(self):
         super().__init__()
-        self._live_min = 2
-        self._live_max = 3
+        self._live = [2, 3]
 
     def update(self, cells_around):
-        if not self._live_min <= cells_around.get(self.TYPE, 0) <= self._live_max:
+        if cells_around.get(self.TYPE, 0) not in self._live:
             return Empty()
         return super().update(cells_around)
 
