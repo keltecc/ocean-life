@@ -93,6 +93,25 @@ Press ENTER to continue:
 ```
 
 
+## Field file format
+
+First line — **width** (in cells)
+
+Second line — **height** (in cells)
+
+Other *height* lines — **cells** (*width* cells in each line)
+
+```
+<width>
+<height>
+<*width* cells> \
+<*width* cells>  |
+...               > *height* times
+<*width* cells>  |
+<*width* cells> /
+```
+
+
 ## Features
 
 - You can skip trailing spaces when creating a field. Parser would be automatically complete them.
