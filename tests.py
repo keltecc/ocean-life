@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from model import *
+from serialization import FieldSerializer
 
 
 class FieldTests(object):
@@ -47,6 +48,14 @@ class FieldTests(object):
 
 
 class CoundAroundTests(object):
+    @staticmethod
+    def empty_field():
+        game = Game(Field(0, 0))
+
+        cells_around = game.count_cells_around(0, 0)
+
+        assert len(cells_around) == 0
+
     @staticmethod
     def ignore_empty():
         game = Game(Field(2, 2))
@@ -251,6 +260,49 @@ class FiguresTests(object):
         FiguresTests.compare(game.field, expected)
 
 
+class SerializationTests(object):
+    @staticmethod
+    def serialize_empty():
+        field = Field(0, 0)
+
+        data = FieldSerializer().serialize(field)
+
+        assert data == '0\n0'
+
+    @staticmethod
+    def serialize_different_types():
+        field = Field(2, 2)
+        field[0, 1] = Rock()
+        field[1, 0] = Fish()
+        field[1, 1] = Shrimp()
+
+        data = FieldSerializer().serialize(field)
+
+        assert data == '2\n2\n F\nRS'
+
+    @staticmethod
+    def unserialize_empty():
+        data = '0\n0'
+
+        field = FieldSerializer().unserialize(data)
+
+        assert field.width == 0
+        assert field.height == 0
+
+    @staticmethod
+    def unserialize_different_types():
+        data = '2\n2\n F\nRS'
+
+        field = FieldSerializer().unserialize(data)
+
+        assert field.width == 2
+        assert field.height == 2
+        assert field[0, 0].TYPE == Empty.TYPE
+        assert field[0, 1].TYPE == Rock.TYPE
+        assert field[1, 0].TYPE == Fish.TYPE
+        assert field[1, 1].TYPE == Shrimp.TYPE
+
+
 if __name__ == '__main__':
     print('Start testing...')
 
@@ -259,6 +311,7 @@ if __name__ == '__main__':
     FieldTests.set_cell()
     FieldTests.clear_fills_cells()
 
+    CoundAroundTests.empty_field()
     CoundAroundTests.ignore_empty()
     CoundAroundTests.ignore_center()
     CoundAroundTests.different_types()
@@ -276,5 +329,10 @@ if __name__ == '__main__':
     FiguresTests.block()
     FiguresTests.blinker()
     FiguresTests.glider()
+
+    SerializationTests.serialize_empty()
+    SerializationTests.serialize_different_types()
+    SerializationTests.unserialize_empty()
+    SerializationTests.unserialize_different_types()
 
     print('All tests passed!')
