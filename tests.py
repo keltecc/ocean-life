@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from model import *
-from serialization import FieldSerializer
+from serialization import FileSerializer
 
 
 class FieldTests(object):
@@ -265,7 +265,7 @@ class SerializationTests(object):
     def serialize_empty():
         field = Field(0, 0)
 
-        data = FieldSerializer().serialize(field)
+        data = FileSerializer().serialize(field)
 
         assert data == '0\n0'
 
@@ -276,7 +276,7 @@ class SerializationTests(object):
         field[1, 0] = Fish()
         field[1, 1] = Shrimp()
 
-        data = FieldSerializer().serialize(field)
+        data = FileSerializer().serialize(field)
 
         assert data == '2\n2\n F\nRS'
 
@@ -284,7 +284,7 @@ class SerializationTests(object):
     def unserialize_empty():
         data = '0\n0'
 
-        field = FieldSerializer().unserialize(data)
+        field = FileSerializer().unserialize(data)
 
         assert field.width == 0
         assert field.height == 0
@@ -293,7 +293,7 @@ class SerializationTests(object):
     def unserialize_different_types():
         data = '2\n2\n F\nRS'
 
-        field = FieldSerializer().unserialize(data)
+        field = FileSerializer().unserialize(data)
 
         assert field.width == 2
         assert field.height == 2
