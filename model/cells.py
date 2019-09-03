@@ -4,9 +4,6 @@
 class Cell(object):
     TYPE = None
 
-    def __init__(self):
-        pass
-
     def update(self, cells_around):
         return self
 
