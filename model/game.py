@@ -3,6 +3,8 @@
 from .cells import Empty
 from .field import Field
 
+from collections import Counter
+
 
 class Game(object):
     def __init__(self, field):
@@ -21,7 +23,7 @@ class Game(object):
         self._field = new_field
 
     def count_cells_around(self, center_x, center_y, delta=1, ignore_type=Empty.TYPE):
-        cells_around = dict()
+        cells_around = Counter()
         for x in range(center_x-delta, center_x+delta+1):
             for y in range(center_y-delta, center_y+delta+1):
                 if x == center_x and y == center_y:
@@ -29,7 +31,5 @@ class Game(object):
                 cell_type = self._field[x, y].TYPE
                 if cell_type == ignore_type:
                     continue
-                if cell_type not in cells_around:
-                    cells_around[cell_type] = 0
                 cells_around[cell_type] += 1
         return cells_around
